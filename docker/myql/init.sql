@@ -1,0 +1,7 @@
+CREATE DATABASE IF NOT EXISTS adonis_db;
+
+CREATE USER IF NOT EXISTS 'adonis'@'%' IDENTIFIED BY 'secret';
+
+GRANT ALL PRIVILEGES ON adonis_db.* TO 'adonis'@'%';
+
+FLUSH PRIVILEGES;
