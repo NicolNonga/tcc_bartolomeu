@@ -1,18 +1,18 @@
 # TCC App Backend API
 
-Backend service built with AdonisJS 6, Docker, MySQL and Redis.
+Serviço backend desenvolvido com AdonisJS 6, Docker, MySQL e Redis.
 
-This project provides the REST API layer for the TCC platform, including:
+Este projeto fornece a camada de API REST para a plataforma TCC, incluindo:
 
-- Authentication & Authorization
-- User Management
-- Roles & Permissions
-- Database Migrations & Seeders
-- Swagger/OpenAPI Documentation
+- Autenticação e Autorização
+- Gestão de Utilizadores
+- Gestão de Perfis e Permissões
+- Migrations e Seeders da Base de Dados
+- Documentação Swagger/OpenAPI
 
 ---
 
-## 🚀 Tech Stack
+## 🚀 Stack Tecnológica
 
 - Node.js 22
 - AdonisJS 6
@@ -25,18 +25,18 @@ This project provides the REST API layer for the TCC platform, including:
 
 ---
 
-## 📁 Project Structure
+## 📁 Estrutura do Projeto
 
 ```bash
 tcc_app/
 ├── app/                  # Controllers, Models, Services
-├── config/               # Adonis configuration files
+├── config/               # Ficheiros de configuração do AdonisJS
 ├── database/
-│   ├── migrations/       # Database schema migrations
-│   └── seeders/          # Initial database seeders
+│   ├── migrations/       # Migrations da base de dados
+│   └── seeders/          # Seeders iniciais
 ├── scripts/
-│   └── entrypoint.sh     # Container bootstrap script
-├── start/                # Routes and kernel
+│   └── entrypoint.sh     # Script de bootstrap automático do container
+├── start/                # Rotas e kernel HTTP
 ├── Dockerfile
 ├── ace.js
 └── package.json
@@ -44,21 +44,21 @@ tcc_app/
 
 ---
 
-## 🐳 Running with Docker
+## 🐳 Executando com Docker
 
-### Build containers
+### Construir os containers
 
 ```bash
 docker compose build --no-cache
 ```
 
-### Start application
+### Iniciar a aplicação
 
 ```bash
 docker compose up
 ```
 
-Application will be available at:
+A aplicação ficará disponível em:
 
 ```bash
 http://localhost:3333
@@ -66,16 +66,16 @@ http://localhost:3333
 
 ---
 
-## ⚙️ Automatic Container Bootstrap
+## ⚙️ Bootstrap Automático do Container
 
-When the `app` container starts, the following steps are executed automatically:
+Quando o container `app` é iniciado, os seguintes passos são executados automaticamente:
 
-1. Wait for MySQL to become available
-2. Run database migrations
-3. Run database seeders
-4. Start AdonisJS development server
+1. Aguarda o MySQL ficar disponível
+2. Executa as migrations da base de dados
+3. Executa os seeders iniciais
+4. Inicia o servidor de desenvolvimento AdonisJS
 
-This behavior is controlled by:
+Este comportamento é controlado pelo ficheiro:
 
 ```bash
 scripts/entrypoint.sh
@@ -83,13 +83,13 @@ scripts/entrypoint.sh
 
 ---
 
-## 🛢️ Database Configuration
+## 🛢️ Configuração da Base de Dados
 
-The project uses MySQL 8 running in Docker.
+O projeto utiliza MySQL 8 rodando em container Docker.
 
-Default credentials:
+Credenciais padrão:
 
-| Variable | Value |
+| Variável | Valor |
 |----------|-------|
 | DB_HOST | mysql |
 | DB_PORT | 3306 |
@@ -99,21 +99,21 @@ Default credentials:
 
 ---
 
-## 🔄 Manual Database Commands
+## 🔄 Comandos Manuais da Base de Dados
 
-### Run migrations manually
+### Executar migrations manualmente
 
 ```bash
 docker compose exec app node ace migration:run
 ```
 
-### Run seeders manually
+### Executar seeders manualmente
 
 ```bash
 docker compose exec app node ace db:seed
 ```
 
-### Reset database
+### Resetar completamente a base de dados
 
 ```bash
 docker compose down -v
@@ -122,20 +122,20 @@ docker compose up --build
 
 ---
 
-## 👤 Default Seeded User
+## 👤 Utilizador Padrão Gerado pelo Seeder
 
-After running seeders, the following admin user is available:
+Após a execução dos seeders, o seguinte utilizador administrador estará disponível:
 
 ```bash
 email: admin@tcc.com
 password: 12345678
 ```
 
-> Change this user after first login.
+> Recomenda-se alterar estas credenciais após o primeiro acesso.
 
 ---
 
-## 📚 API Documentation (Swagger)
+## 📚 Documentação da API (Swagger)
 
 Swagger JSON:
 
@@ -151,17 +151,17 @@ http://localhost:3333/docs
 
 ---
 
-## 🔐 Authentication
+## 🔐 Autenticação
 
-Authentication is based on JWT Bearer Token.
+A autenticação da API é baseada em JWT Bearer Token.
 
-Login endpoint:
+Endpoint de login:
 
 ```bash
 POST /api/auth
 ```
 
-Use returned token on protected routes:
+Após autenticação, utilizar o token retornado nas rotas protegidas:
 
 ```bash
 Authorization: Bearer <token>
@@ -169,21 +169,21 @@ Authorization: Bearer <token>
 
 ---
 
-## 🧪 Useful Docker Commands
+## 🧪 Comandos Úteis Docker
 
-### Enter app container
+### Entrar no container da aplicação
 
 ```bash
 docker compose exec app sh
 ```
 
-### Enter mysql container
+### Entrar no container MySQL
 
 ```bash
 docker compose exec mysql mysql -uroot -proot
 ```
 
-### View logs
+### Visualizar logs da aplicação
 
 ```bash
 docker logs backend-app-1
@@ -191,11 +191,11 @@ docker logs backend-app-1
 
 ---
 
-## 🛠️ Common Troubleshooting
+## 🛠️ Resolução de Problemas Comuns
 
-### MySQL Access Denied
+### Erro MySQL Access Denied
 
-Reset database volume:
+Resetar completamente o volume da base de dados:
 
 ```bash
 docker compose down -v
@@ -204,15 +204,15 @@ docker compose up --build
 
 ---
 
-### Container cannot resolve mysql host
+### Container não consegue resolver o host mysql
 
-Ensure all services are running:
+Verificar se todos os serviços estão ativos:
 
 ```bash
 docker ps
 ```
 
-Expected:
+Containers esperados:
 
 - backend-app-1
 - backend-mysql-1
@@ -220,7 +220,7 @@ Expected:
 
 ---
 
-### Run fresh npm install
+### Reinstalar dependências Node
 
 ```bash
 docker compose build --no-cache
@@ -228,26 +228,26 @@ docker compose build --no-cache
 
 ---
 
-## 👥 Development Workflow
+## 👥 Fluxo de Desenvolvimento
 
-1. Create feature branch
-2. Implement code
-3. Create migration if needed
-4. Create/update seeder if needed
-5. Test inside Docker
-6. Open Pull Request
-
----
-
-## 📌 Important Notes
-
-- Never run Node locally outside Docker for this project
-- All commands should be executed through Docker Compose
-- Database state is managed by Docker volumes
-- Seeders should be idempotent
+1. Criar branch de funcionalidade
+2. Implementar código
+3. Criar migration se necessário
+4. Criar ou atualizar seeder se necessário
+5. Testar dentro do ambiente Docker
+6. Abrir Pull Request
 
 ---
 
-## 📄 License
+## 📌 Notas Importantes
 
-Internal Academic Project - TCC Platform
+- Nunca executar Node localmente fora do Docker neste projeto
+- Todos os comandos devem ser executados através do Docker Compose
+- O estado da base de dados é gerido por volumes Docker
+- Seeders devem ser idempotentes
+
+---
+
+## 📄 Licença
+
+Projeto Académico Interno - Plataforma TCC

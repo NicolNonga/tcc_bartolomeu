@@ -10,7 +10,7 @@ export default class extends BaseSeeder {
       {
         id: 1,
         password: '1234',
-        email: 'nicodemosarmindo@gmail.com',
+        email: 'admin@tcc.com',
         roleId: role?.id,
         fullName: 'user root',
       },
