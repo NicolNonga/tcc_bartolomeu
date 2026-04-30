@@ -1,0 +1,641 @@
+{
+	"info": {
+		"_postman_id": "negociacao-api-tests",
+		"name": "API Negociação - Testes de Integração",
+		"description": "Coleção de testes para validar a API de criação de negociações em crédito e cobrança",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Casos de Sucesso",
+			"item": [
+				{
+					"name": "01 - Negociação Simples (Não Parcelada)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"debtAmount\": 1000.00,\n  \"discountAmount\": 100.00,\n  \"discountRate\": 10.0,\n  \"totalAmount\": 900.00,\n  \"finalAmount\": 900.00,\n  \"effectiveDate\": \"2024-01-15\",\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-12-31\",\n  \"isInstallmentment\": false,\n  \"isParcelaIgual\": false,\n  \"processes\": [\n    { \"id\": 1 }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/negotiations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"negotiations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "02 - Negociação Parcelada (Parcelas Iguais)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"debtAmount\": 1800.00,\n  \"discountAmount\": 0.00,\n  \"discountRate\": 0.0,\n  \"totalAmount\": 1800.00,\n  \"finalAmount\": 1800.00,\n  \"effectiveDate\": \"2024-01-15\",\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-12-31\",\n  \"isInstallmentment\": true,\n  \"isParcelaIgual\": true,\n  \"totalInstallments\": 3,\n  \"processes\": [\n    { \"id\": 1 }\n  ],\n  \"installmentments\": [\n    {\n      \"installmentNumber\": 1,\n      \"installmentAmount\": 600.00,\n      \"installmentPercentage\": 33.33,\n      \"dueDate\": \"2024-04-15\",\n      \"penaltyPercentage\": 2.0\n    },\n    {\n      \"installmentNumber\": 2,\n      \"installmentAmount\": 600.00,\n      \"installmentPercentage\": 33.33,\n      \"dueDate\": \"2024-07-15\",\n      \"penaltyPercentage\": 2.0\n    },\n    {\n      \"installmentNumber\": 3,\n      \"installmentAmount\": 600.00,\n      \"installmentPercentage\": 33.34,\n      \"dueDate\": \"2024-10-15\",\n      \"penaltyPercentage\": 2.0\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/negotiations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"negotiations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03 - Negociação Parcelada (Parcelas Diferentes)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"debtAmount\": 3000.00,\n  \"discountAmount\": 300.00,\n  \"discountRate\": 10.0,\n  \"totalAmount\": 2700.00,\n  \"finalAmount\": 2700.00,\n  \"effectiveDate\": \"2024-01-15\",\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-12-31\",\n  \"isInstallmentment\": true,\n  \"isParcelaIgual\": false,\n  \"totalInstallments\": 3,\n  \"processes\": [\n    { \"id\": 1 },\n    { \"id\": 2 }\n  ],\n  \"installmentments\": [\n    {\n      \"installmentNumber\": 1,\n      \"installmentAmount\": 1350.00,\n      \"installmentPercentage\": 50.0,\n      \"dueDate\": \"2024-04-15\",\n      \"penaltyPercentage\": 2.0\n    },\n    {\n      \"installmentNumber\": 2,\n      \"installmentAmount\": 810.00,\n      \"installmentPercentage\": 30.0,\n      \"dueDate\": \"2024-07-15\",\n      \"penaltyPercentage\": 2.0\n    },\n    {\n      \"installmentNumber\": 3,\n      \"installmentAmount\": 540.00,\n      \"installmentPercentage\": 20.0,\n      \"dueDate\": \"2024-10-15\",\n      \"penaltyPercentage\": 2.0\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/negotiations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"negotiations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "04 - Negociação com Desconto Total",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"debtAmount\": 1000.00,\n  \"discountAmount\": 1000.00,\n  \"discountRate\": 100.0,\n  \"totalAmount\": 0.00,\n  \"finalAmount\": 0.00,\n  \"effectiveDate\": \"2024-01-15\",\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-12-31\",\n  \"isInstallmentment\": false,\n  \"isParcelaIgual\": false,\n  \"processes\": [\n    { \"id\": 1 }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/negotiations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"negotiations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Casos de Erro - Validação de Datas",
+			"item": [
+				{
+					"name": "05 - Erro: Data Início Posterior à Data Fim",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"debtAmount\": 1000.00,\n  \"discountAmount\": 100.00,\n  \"discountRate\": 10.0,\n  \"totalAmount\": 900.00,\n  \"finalAmount\": 900.00,\n  \"effectiveDate\": \"2024-01-15\",\n  \"startDate\": \"2024-12-31\",\n  \"endDate\": \"2024-01-15\",\n  \"isInstallmentment\": false,\n  \"isParcelaIgual\": false,\n  \"processes\": [\n    { \"id\": 1 }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/negotiations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"negotiations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "06 - Erro: Data Efetiva Futura",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"debtAmount\": 1000.00,\n  \"discountAmount\": 100.00,\n  \"discountRate\": 10.0,\n  \"totalAmount\": 900.00,\n  \"finalAmount\": 900.00,\n  \"effectiveDate\": \"2025-12-31\",\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-12-31\",\n  \"isInstallmentment\": false,\n  \"isParcelaIgual\": false,\n  \"processes\": [\n    { \"id\": 1 }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/negotiations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"negotiations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Casos de Erro - Validação de Valores",
+			"item": [
+				{
+					"name": "07 - Erro: Valor Total Incorreto",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"debtAmount\": 1000.00,\n  \"discountAmount\": 100.00,\n  \"discountRate\": 10.0,\n  \"totalAmount\": 950.00,\n  \"finalAmount\": 950.00,\n  \"effectiveDate\": \"2024-01-15\",\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-12-31\",\n  \"isInstallmentment\": false,\n  \"isParcelaIgual\": false,\n  \"processes\": [\n    { \"id\": 1 }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/negotiations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"negotiations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "08 - Erro: Valor Final Maior que Total",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"debtAmount\": 1000.00,\n  \"discountAmount\": 100.00,\n  \"discountRate\": 10.0,\n  \"totalAmount\": 900.00,\n  \"finalAmount\": 1000.00,\n  \"effectiveDate\": \"2024-01-15\",\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-12-31\",\n  \"isInstallmentment\": false,\n  \"isParcelaIgual\": false,\n  \"processes\": [\n    { \"id\": 1 }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/negotiations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"negotiations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "09 - Erro: Valores Negativos",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"debtAmount\": -1000.00,\n  \"discountAmount\": 100.00,\n  \"discountRate\": 10.0,\n  \"totalAmount\": 900.00,\n  \"finalAmount\": 900.00,\n  \"effectiveDate\": \"2024-01-15\",\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-12-31\",\n  \"isInstallmentment\": false,\n  \"isParcelaIgual\": false,\n  \"processes\": [\n    { \"id\": 1 }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/negotiations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"negotiations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Casos de Erro - Validação de Processos",
+			"item": [
+				{
+					"name": "10 - Erro: Sem Processos",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"debtAmount\": 1000.00,\n  \"discountAmount\": 100.00,\n  \"discountRate\": 10.0,\n  \"totalAmount\": 900.00,\n  \"finalAmount\": 900.00,\n  \"effectiveDate\": \"2024-01-15\",\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-12-31\",\n  \"isInstallmentment\": false,\n  \"isParcelaIgual\": false,\n  \"processes\": []\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/negotiations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"negotiations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "11 - Erro: Processo Inexistente",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"debtAmount\": 1000.00,\n  \"discountAmount\": 100.00,\n  \"discountRate\": 10.0,\n  \"totalAmount\": 900.00,\n  \"finalAmount\": 900.00,\n  \"effectiveDate\": \"2024-01-15\",\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-12-31\",\n  \"isInstallmentment\": false,\n  \"isParcelaIgual\": false,\n  \"processes\": [\n    { \"id\": 99999 }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/negotiations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"negotiations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Casos de Erro - Validação de Parcelas",
+			"item": [
+				{
+					"name": "12 - Erro: Parcelada Sem Parcelas",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"debtAmount\": 1000.00,\n  \"discountAmount\": 100.00,\n  \"discountRate\": 10.0,\n  \"totalAmount\": 900.00,\n  \"finalAmount\": 900.00,\n  \"effectiveDate\": \"2024-01-15\",\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-12-31\",\n  \"isInstallmentment\": true,\n  \"isParcelaIgual\": false,\n  \"processes\": [\n    { \"id\": 1 }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/negotiations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"negotiations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "13 - Erro: Soma das Parcelas Incorreta",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"debtAmount\": 1000.00,\n  \"discountAmount\": 100.00,\n  \"discountRate\": 10.0,\n  \"totalAmount\": 900.00,\n  \"finalAmount\": 900.00,\n  \"effectiveDate\": \"2024-01-15\",\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-12-31\",\n  \"isInstallmentment\": true,\n  \"isParcelaIgual\": false,\n  \"totalInstallments\": 2,\n  \"processes\": [\n    { \"id\": 1 }\n  ],\n  \"installmentments\": [\n    {\n      \"installmentNumber\": 1,\n      \"installmentAmount\": 400.00,\n      \"installmentPercentage\": 44.44,\n      \"dueDate\": \"2024-06-15\",\n      \"penaltyPercentage\": 2.0\n    },\n    {\n      \"installmentNumber\": 2,\n      \"installmentAmount\": 400.00,\n      \"installmentPercentage\": 44.44,\n      \"dueDate\": \"2024-12-15\",\n      \"penaltyPercentage\": 2.0\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/negotiations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"negotiations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "14 - Erro: Parcelas Diferentes Marcadas como Iguais",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"debtAmount\": 1000.00,\n  \"discountAmount\": 100.00,\n  \"discountRate\": 10.0,\n  \"totalAmount\": 900.00,\n  \"finalAmount\": 900.00,\n  \"effectiveDate\": \"2024-01-15\",\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-12-31\",\n  \"isInstallmentment\": true,\n  \"isParcelaIgual\": true,\n  \"totalInstallments\": 2,\n  \"processes\": [\n    { \"id\": 1 }\n  ],\n  \"installmentments\": [\n    {\n      \"installmentNumber\": 1,\n      \"installmentAmount\": 450.00,\n      \"installmentPercentage\": 50.0,\n      \"dueDate\": \"2024-06-15\",\n      \"penaltyPercentage\": 2.0\n    },\n    {\n      \"installmentNumber\": 2,\n      \"installmentAmount\": 450.01,\n      \"installmentPercentage\": 50.0,\n      \"dueDate\": \"2024-12-15\",\n      \"penaltyPercentage\": 2.0\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/negotiations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"negotiations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "15 - Erro: Data Vencimento Parcela Anterior ao Início",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"debtAmount\": 1000.00,\n  \"discountAmount\": 100.00,\n  \"discountRate\": 10.0,\n  \"totalAmount\": 900.00,\n  \"finalAmount\": 900.00,\n  \"effectiveDate\": \"2024-01-15\",\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-12-31\",\n  \"isInstallmentment\": true,\n  \"isParcelaIgual\": false,\n  \"totalInstallments\": 2,\n  \"processes\": [\n    { \"id\": 1 }\n  ],\n  \"installmentments\": [\n    {\n      \"installmentNumber\": 1,\n      \"installmentAmount\": 450.00,\n      \"installmentPercentage\": 50.0,\n      \"dueDate\": \"2023-12-15\",\n      \"penaltyPercentage\": 2.0\n    },\n    {\n      \"installmentNumber\": 2,\n      \"installmentAmount\": 450.00,\n      \"installmentPercentage\": 50.0,\n      \"dueDate\": \"2024-12-15\",\n      \"penaltyPercentage\": 2.0\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/negotiations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"negotiations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Casos de Erro - Campos Obrigatórios",
+			"item": [
+				{
+					"name": "16 - Erro: Campos Obrigatórios Ausentes",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"debtAmount\": 1000.00,\n  \"discountAmount\": 100.00,\n  \"effectiveDate\": \"2024-01-15\",\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-12-31\",\n  \"isInstallmentment\": false,\n  \"isParcelaIgual\": false,\n  \"processes\": [\n    { \"id\": 1 }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/negotiations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"negotiations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "17 - Erro: JSON Malformado",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"debtAmount\": 1000.00,\n  \"discountAmount\": 100.00,\n  \"discountRate\": 10.0,\n  \"totalAmount\": 900.00,\n  \"finalAmount\": 900.00,\n  \"effectiveDate\": \"2024-01-15\",\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-12-31\",\n  \"isInstallmentment\": false,\n  \"isParcelaIgual\": false,\n  \"processes\": [\n    { \"id\": 1 }\n  ],\n  // JSON inválido com comentário\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/negotiations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"negotiations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Casos Limite",
+			"item": [
+				{
+					"name": "18 - Valor Mínimo (1 centavo)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"debtAmount\": 0.01,\n  \"discountAmount\": 0.00,\n  \"discountRate\": 0.0,\n  \"totalAmount\": 0.01,\n  \"finalAmount\": 0.01,\n  \"effectiveDate\": \"2024-01-15\",\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-01-16\",\n  \"isInstallmentment\": false,\n  \"isParcelaIgual\": false,\n  \"processes\": [\n    { \"id\": 1 }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/negotiations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"negotiations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "19 - Muitas Parcelas (12x)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"debtAmount\": 1200.00,\n  \"discountAmount\": 0.00,\n  \"discountRate\": 0.0,\n  \"totalAmount\": 1200.00,\n  \"finalAmount\": 1200.00,\n  \"effectiveDate\": \"2024-01-15\",\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-12-31\",\n  \"isInstallmentment\": true,\n  \"isParcelaIgual\": true,\n  \"totalInstallments\": 12,\n  \"processes\": [\n    { \"id\": 1 }\n  ],\n  \"installmentments\": [\n    {\n      \"installmentNumber\": 1,\n      \"installmentAmount\": 100.00,\n      \"installmentPercentage\": 8.33,\n      \"dueDate\": \"2024-02-15\",\n      \"penaltyPercentage\": 2.0\n    },\n    {\n      \"installmentNumber\": 2,\n      \"installmentAmount\": 100.00,\n      \"installmentPercentage\": 8.33,\n      \"dueDate\": \"2024-03-15\",\n      \"penaltyPercentage\": 2.0\n    },\n    {\n      \"installmentNumber\": 3,\n      \"installmentAmount\": 100.00,\n      \"installmentPercentage\": 8.33,\n      \"dueDate\": \"2024-04-15\",\n      \"penaltyPercentage\": 2.0\n    },\n    {\n      \"installmentNumber\": 4,\n      \"installmentAmount\": 100.00,\n      \"installmentPercentage\": 8.33,\n      \"dueDate\": \"2024-05-15\",\n      \"penaltyPercentage\": 2.0\n    },\n    {\n      \"installmentNumber\": 5,\n      \"installmentAmount\": 100.00,\n      \"installmentPercentage\": 8.33,\n      \"dueDate\": \"2024-06-15\",\n      \"penaltyPercentage\": 2.0\n    },\n    {\n      \"installmentNumber\": 6,\n      \"installmentAmount\": 100.00,\n      \"installmentPercentage\": 8.33,\n      \"dueDate\": \"2024-07-15\",\n      \"penaltyPercentage\": 2.0\n    },\n    {\n      \"installmentNumber\": 7,\n      \"installmentAmount\": 100.00,\n      \"installmentPercentage\": 8.33,\n      \"dueDate\": \"2024-08-15\",\n      \"penaltyPercentage\": 2.0\n    },\n    {\n      \"installmentNumber\": 8,\n      \"installmentAmount\": 100.00,\n      \"installmentPercentage\": 8.33,\n      \"dueDate\": \"2024-09-15\",\n      \"penaltyPercentage\": 2.0\n    },\n    {\n      \"installmentNumber\": 9,\n      \"installmentAmount\": 100.00,\n      \"installmentPercentage\": 8.33,\n      \"dueDate\": \"2024-10-15\",\n      \"penaltyPercentage\": 2.0\n    },\n    {\n      \"installmentNumber\": 10,\n      \"installmentAmount\": 100.00,\n      \"installmentPercentage\": 8.33,\n      \"dueDate\": \"2024-11-15\",\n      \"penaltyPercentage\": 2.0\n    },\n    {\n      \"installmentNumber\": 11,\n      \"installmentAmount\": 100.00,\n      \"installmentPercentage\": 8.33,\n      \"dueDate\": \"2024-12-15\",\n      \"penaltyPercentage\": 2.0\n    },\n    {\n      \"installmentNumber\": 12,\n      \"installmentAmount\": 100.04,\n      \"installmentPercentage\": 8.37,\n      \"dueDate\": \"2024-12-31\",\n      \"penaltyPercentage\": 2.0\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/negotiations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"negotiations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3333",
+			"type": "string"
+		}
+	]
+}

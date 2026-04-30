@@ -1,0 +1,335 @@
+### Configuração de Variáveis
+@baseUrl = http://localhost:3333
+@contentType = application/json
+
+### 01 - Teste de Sucesso: Negociação Simples
+POST {{baseUrl}}/api/negotiations
+Content-Type: {{contentType}}
+
+{
+  "debtAmount": 1000.00,
+  "discountAmount": 100.00,
+  "discountRate": 10.0,
+  "totalAmount": 900.00,
+  "finalAmount": 900.00,
+  "effectiveDate": "2024-01-15",
+  "startDate": "2024-01-15",
+  "endDate": "2024-12-31",
+  "isInstallmentment": false,
+  "isParcelaIgual": false,
+  "processes": [
+    { "id": 1 }
+  ]
+}
+
+### 02 - Teste de Sucesso: Negociação Parcelada
+POST {{baseUrl}}/api/negotiations
+Content-Type: {{contentType}}
+
+{
+  "debtAmount": 1800.00,
+  "discountAmount": 0.00,
+  "discountRate": 0.0,
+  "totalAmount": 1800.00,
+  "finalAmount": 1800.00,
+  "effectiveDate": "2024-01-15",
+  "startDate": "2024-01-15",
+  "endDate": "2024-12-31",
+  "isInstallmentment": true,
+  "isParcelaIgual": true,
+  "totalInstallments": 3,
+  "processes": [
+    { "id": 1 }
+  ],
+  "installmentments": [
+    {
+      "installmentNumber": 1,
+      "installmentAmount": 600.00,
+      "installmentPercentage": 33.33,
+      "dueDate": "2024-04-15",
+      "penaltyPercentage": 2.0
+    },
+    {
+      "installmentNumber": 2,
+      "installmentAmount": 600.00,
+      "installmentPercentage": 33.33,
+      "dueDate": "2024-07-15",
+      "penaltyPercentage": 2.0
+    },
+    {
+      "installmentNumber": 3,
+      "installmentAmount": 600.00,
+      "installmentPercentage": 33.34,
+      "dueDate": "2024-10-15",
+      "penaltyPercentage": 2.0
+    }
+  ]
+}
+
+### 03 - Teste de Erro: Data Início Posterior à Data Fim
+POST {{baseUrl}}/api/negotiations
+Content-Type: {{contentType}}
+
+{
+  "debtAmount": 1000.00,
+  "discountAmount": 100.00,
+  "discountRate": 10.0,
+  "totalAmount": 900.00,
+  "finalAmount": 900.00,
+  "effectiveDate": "2024-01-15",
+  "startDate": "2024-12-31",
+  "endDate": "2024-01-15",
+  "isInstallmentment": false,
+  "isParcelaIgual": false,
+  "processes": [
+    { "id": 1 }
+  ]
+}
+
+### 04 - Teste de Erro: Valor Total Incorreto
+POST {{baseUrl}}/api/negotiations
+Content-Type: {{contentType}}
+
+{
+  "debtAmount": 1000.00,
+  "discountAmount": 100.00,
+  "discountRate": 10.0,
+  "totalAmount": 950.00,
+  "finalAmount": 950.00,
+  "effectiveDate": "2024-01-15",
+  "startDate": "2024-01-15",
+  "endDate": "2024-12-31",
+  "isInstallmentment": false,
+  "isParcelaIgual": false,
+  "processes": [
+    { "id": 1 }
+  ]
+}
+
+### 05 - Teste de Erro: Sem Processos
+POST {{baseUrl}}/api/negotiations
+Content-Type: {{contentType}}
+
+{
+  "debtAmount": 1000.00,
+  "discountAmount": 100.00,
+  "discountRate": 10.0,
+  "totalAmount": 900.00,
+  "finalAmount": 900.00,
+  "effectiveDate": "2024-01-15",
+  "startDate": "2024-01-15",
+  "endDate": "2024-12-31",
+  "isInstallmentment": false,
+  "isParcelaIgual": false,
+  "processes": []
+}
+
+### 06 - Teste de Erro: Parcelada Sem Parcelas
+POST {{baseUrl}}/api/negotiations
+Content-Type: {{contentType}}
+
+{
+  "debtAmount": 1000.00,
+  "discountAmount": 100.00,
+  "discountRate": 10.0,
+  "totalAmount": 900.00,
+  "finalAmount": 900.00,
+  "effectiveDate": "2024-01-15",
+  "startDate": "2024-01-15",
+  "endDate": "2024-12-31",
+  "isInstallmentment": true,
+  "isParcelaIgual": false,
+  "processes": [
+    { "id": 1 }
+  ]
+}
+
+### 07 - Teste de Erro: Soma das Parcelas Incorreta
+POST {{baseUrl}}/api/negotiations
+Content-Type: {{contentType}}
+
+{
+  "debtAmount": 1000.00,
+  "discountAmount": 100.00,
+  "discountRate": 10.0,
+  "totalAmount": 900.00,
+  "finalAmount": 900.00,
+  "effectiveDate": "2024-01-15",
+  "startDate": "2024-01-15",
+  "endDate": "2024-12-31",
+  "isInstallmentment": true,
+  "isParcelaIgual": false,
+  "totalInstallments": 2,
+  "processes": [
+    { "id": 1 }
+  ],
+  "installmentments": [
+    {
+      "installmentNumber": 1,
+      "installmentAmount": 400.00,
+      "installmentPercentage": 44.44,
+      "dueDate": "2024-06-15",
+      "penaltyPercentage": 2.0
+    },
+    {
+      "installmentNumber": 2,
+      "installmentAmount": 400.00,
+      "installmentPercentage": 44.44,
+      "dueDate": "2024-12-15",
+      "penaltyPercentage": 2.0
+    }
+  ]
+}
+
+### 08 - Teste de Erro: Processo Inexistente
+POST {{baseUrl}}/api/negotiations
+Content-Type: {{contentType}}
+
+{
+  "debtAmount": 1000.00,
+  "discountAmount": 100.00,
+  "discountRate": 10.0,
+  "totalAmount": 900.00,
+  "finalAmount": 900.00,
+  "effectiveDate": "2024-01-15",
+  "startDate": "2024-01-15",
+  "endDate": "2024-12-31",
+  "isInstallmentment": false,
+  "isParcelaIgual": false,
+  "processes": [
+    { "id": 99999 }
+  ]
+}
+
+### 09 - Teste Limite: Valor Mínimo
+POST {{baseUrl}}/api/negotiations
+Content-Type: {{contentType}}
+
+{
+  "debtAmount": 0.01,
+  "discountAmount": 0.00,
+  "discountRate": 0.0,
+  "totalAmount": 0.01,
+  "finalAmount": 0.01,
+  "effectiveDate": "2024-01-15",
+  "startDate": "2024-01-15",
+  "endDate": "2024-01-16",
+  "isInstallmentment": false,
+  "isParcelaIgual": false,
+  "processes": [
+    { "id": 1 }
+  ]
+}
+
+### 10 - Teste Limite: Desconto Total
+POST {{baseUrl}}/api/negotiations
+Content-Type: {{contentType}}
+
+{
+  "debtAmount": 1000.00,
+  "discountAmount": 1000.00,
+  "discountRate": 100.0,
+  "totalAmount": 0.00,
+  "finalAmount": 0.00,
+  "effectiveDate": "2024-01-15",
+  "startDate": "2024-01-15",
+  "endDate": "2024-12-31",
+  "isInstallmentment": false,
+  "isParcelaIgual": false,
+  "processes": [
+    { "id": 1 }
+  ]
+}
+
+### ===== ENDPOINTS DA CALCULADORA DE NEGOCIAÇÃO =====
+
+### 11 - Calcular Valores da Negociação
+POST {{baseUrl}}/api/negotiations/calculate-values
+Content-Type: {{contentType}}
+
+{
+  "valorDivida": 1000.00,
+  "percentualDesconto": 15.0
+}
+
+### 12 - Gerar Parcelas Iguais
+POST {{baseUrl}}/api/negotiations/generate-installments
+Content-Type: {{contentType}}
+
+{
+  "valorTotal": 850.00,
+  "numeroParcelas": 3,
+  "dataInicio": "2024-01-15",
+  "intervaloDias": 30,
+  "percentualMulta": 2.0,
+  "tipo": "iguais"
+}
+
+### 13 - Gerar Parcelas Decrescentes
+POST {{baseUrl}}/api/negotiations/generate-installments
+Content-Type: {{contentType}}
+
+{
+  "valorTotal": 1200.00,
+  "numeroParcelas": 4,
+  "dataInicio": "2024-01-15",
+  "intervaloDias": 30,
+  "percentualMulta": 2.0,
+  "tipo": "decrescentes",
+  "percentualPrimeiraParcela": 40
+}
+
+### 14 - Calcular Valor com Atraso
+POST {{baseUrl}}/api/negotiations/calculate-overdue
+Content-Type: {{contentType}}
+
+{
+  "valorOriginal": 500.00,
+  "percentualMulta": 2.0,
+  "percentualJurosMensal": 1.0,
+  "mesesAtraso": 3
+}
+
+### 15 - Validar Cálculos de Negociação
+POST {{baseUrl}}/api/negotiations/validate-calculations
+Content-Type: {{contentType}}
+
+{
+  "valorDivida": 1000.00,
+  "valorDesconto": 100.00,
+  "taxaDesconto": 10.0,
+  "valorTotal": 900.00,
+  "valorFinal": 900.00,
+  "effectiveDate": "2024-01-15",
+  "startDate": "2024-01-15",
+  "endDate": "2024-12-31",
+  "eParcelado": true,
+  "isParcelaIgual": true,
+  "totalParcelas": 3,
+  "processes": [
+    { "id": 1 }
+  ],
+  "parcelas": [
+    {
+      "numeroParcela": 1,
+      "valorParcela": 300.00,
+      "valorPercentual": 33.33,
+      "dataVencimento": "2024-04-15",
+      "percentualMulta": 2.0
+    },
+    {
+      "numeroParcela": 2,
+      "valorParcela": 300.00,
+      "valorPercentual": 33.33,
+      "dataVencimento": "2024-07-15",
+      "percentualMulta": 2.0
+    },
+    {
+      "numeroParcela": 3,
+      "valorParcela": 300.00,
+      "valorPercentual": 33.34,
+      "dataVencimento": "2024-10-15",
+      "percentualMulta": 2.0
+    }
+  ]
+}

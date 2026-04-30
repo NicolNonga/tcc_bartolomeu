@@ -1,0 +1,15 @@
+{
+  "debtAmount": 1000.00,
+  "discountAmount": 100.00,
+  "discountRate": 10.0,
+  "totalAmount": 900.00,
+  "finalAmount": 900.00,
+  "effectiveDate": "2024-01-15",
+  "startDate": "2024-12-31",
+  "endDate": "2024-01-15",
+  "isInstallmentment": false,
+  "isParcelaIgual": false,
+  "processes": [
+    { "id": 1 }
+  ]
+}

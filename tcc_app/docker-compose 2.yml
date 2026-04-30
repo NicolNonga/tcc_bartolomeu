@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  # Your existing app service
+  app:
+    build: .
+    ports:
+      - "3333:3333"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - REDIS_HOST=redis  # This will reference the redis service below
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+
+  # Add Redis service
+  redis:
+    image: redis:7-alpine
+    container_name: my_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+volumes:
+  redis_data:

@@ -1,0 +1,39 @@
+{
+  "debtAmount": 1800.00,
+  "discountAmount": 0.00,
+  "discountRate": 0.0,
+  "totalAmount": 1800.00,
+  "finalAmount": 1800.00,
+  "effectiveDate": "2024-01-15",
+  "startDate": "2024-01-15",
+  "endDate": "2024-12-31",
+  "isInstallmentment": true,
+  "isParcelaIgual": true,
+  "totalInstallments": 3,
+  "processes": [
+    { "id": 1 }
+  ],
+  "installmentments": [
+    {
+      "installmentNumber": 1,
+      "installmentAmount": 600.00,
+      "installmentPercentage": 33.33,
+      "dueDate": "2024-04-15",
+      "penaltyPercentage": 2.0
+    },
+    {
+      "installmentNumber": 2,
+      "installmentAmount": 600.00,
+      "installmentPercentage": 33.33,
+      "dueDate": "2024-07-15",
+      "penaltyPercentage": 2.0
+    },
+    {
+      "installmentNumber": 3,
+      "installmentAmount": 600.00,
+      "installmentPercentage": 33.34,
+      "dueDate": "2024-10-15",
+      "penaltyPercentage": 2.0
+    }
+  ]
+}

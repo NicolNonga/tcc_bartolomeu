@@ -1,0 +1,31 @@
+{
+	"id": "negociacao-environment",
+	"name": "Negociação API - Environment",
+	"values": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3333",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "secret",
+			"enabled": true
+		},
+		{
+			"key": "process_id_valid",
+			"value": "1",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "process_id_invalid",
+			"value": "99999",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment"
+}
