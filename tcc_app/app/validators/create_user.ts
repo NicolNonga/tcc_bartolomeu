@@ -15,17 +15,7 @@ export const CreateUserValidator = vine.compile(
       const role = await db.from('roles').where('id', value).first()
       return role
     }),
-    managerId: vine
-      .number()
-      .exists(async (db, value) => {
-        const manage = await db.from('users').where('id', value).first()
-        return manage
-      })
-      .optional(),
-    categorie_id: vine.number().exists(async (db, value) => {
-      const category = await db.from('categories').where('id', value).first()
-      return category
-    }),
+
     email: vine
       .string()
       .unique(async (db, value) => {
@@ -33,11 +23,11 @@ export const CreateUserValidator = vine.compile(
         return !user
       })
       .email(),
-    phone_number: vine.string().unique(async (db, value) => {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const phone_number = await db.from('users').where('phone_number', value).first()
-      return !phone_number
-    }),
+    // phone_number: vine.string().unique(async (db, value) => {
+    //   // eslint-disable-next-line @typescript-eslint/naming-convention
+    //   const phone_number = await db.from('users').where('phone_number', value).first()
+    //   return !phone_number
+    // }),
   })
 )
 
