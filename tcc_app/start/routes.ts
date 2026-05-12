@@ -9,6 +9,7 @@
 import * as AutoSwaggerModule from 'adonis-autoswagger'
 import swagger from '#config/swagger'
 import router from '@adonisjs/core/services/router'
+const DepartamentosController = () => import('#controllers/departamentos_controller')
 
 const AutoSwagger: any =
   (AutoSwaggerModule as any).default?.default ||
@@ -17,7 +18,6 @@ const AutoSwagger: any =
 const AuthsController = () => import('#controllers/auth_controller')
 const UsersController = () => import('#controllers/users_controller')
 import { middleware } from './kernel.js'
-
 
 const ResetPasswordsController = () => import('#controllers/reset_passwords_controller')
 
@@ -57,10 +57,16 @@ router
   })
   .prefix('/api/roles_permission')
 
-  router.get('/swagger', async () => {
-    return AutoSwagger.docs(router.toJSON(), swagger)
-  })
+router.get('/departamentos', [DepartamentosController, 'index'])
+router.get('/departamentos/:id', [DepartamentosController, 'show'])
+router.post('/departamentos', [DepartamentosController, 'store'])
+router.put('/departamentos/:id', [DepartamentosController, 'update'])
+router.delete('/departamentos/:id', [DepartamentosController, 'destroy'])
 
-  router.get('/docs', async () => {
-    return AutoSwagger.ui('/swagger', swagger)
-  })
+router.get('/swagger', async () => {
+  return AutoSwagger.docs(router.toJSON(), swagger)
+})
+
+router.get('/docs', async () => {
+  return AutoSwagger.ui('/swagger', swagger)
+})
