@@ -10,7 +10,8 @@ import * as AutoSwaggerModule from 'adonis-autoswagger'
 import swagger from '#config/swagger'
 import router from '@adonisjs/core/services/router'
 const DepartamentosController = () => import('#controllers/departamentos_controller')
-
+const EstadosSolicitacaoController = () => import('#controllers/estados_solicitacao_controller')
+const SolicitacoesController = () => import('#controllers/solicitacoes_controller')
 const AutoSwagger: any =
   (AutoSwaggerModule as any).default?.default ||
   (AutoSwaggerModule as any).default ||
@@ -62,6 +63,18 @@ router.get('/departamentos/:id', [DepartamentosController, 'show'])
 router.post('/departamentos', [DepartamentosController, 'store'])
 router.put('/departamentos/:id', [DepartamentosController, 'update'])
 router.delete('/departamentos/:id', [DepartamentosController, 'destroy'])
+
+router.get('/estados-solicitacao', [EstadosSolicitacaoController, 'index'])
+router.get('/estados-solicitacao/:id', [EstadosSolicitacaoController, 'show'])
+router.post('/estados-solicitacao', [EstadosSolicitacaoController, 'store'])
+router.put('/estados-solicitacao/:id', [EstadosSolicitacaoController, 'update'])
+router.delete('/estados-solicitacao/:id', [EstadosSolicitacaoController, 'destroy'])
+
+router.get('/solicitacoes', [SolicitacoesController, 'index'])
+router.get('solicitacoes/minhas', [SolicitacoesController, 'minhas']).use(middleware.auth())
+router.get('/solicitacoes/:id', [SolicitacoesController, 'show']).use(middleware.auth())
+router.post('/solicitacoes', [SolicitacoesController, 'store']).use(middleware.auth())
+router.put('/solicitacoes/:id', [SolicitacoesController, 'update']).use(middleware.auth())
 
 router.get('/swagger', async () => {
   return AutoSwagger.docs(router.toJSON(), swagger)

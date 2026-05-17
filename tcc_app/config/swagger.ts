@@ -1,11 +1,11 @@
 export default {
-  path: import.meta.dirname + '/../', // ← aponta para a raiz do projecto
+  path: import.meta.dirname + '/../', // aponta para a raiz do projecto
   title: 'TCC API',
   version: '1.0.0',
   description: 'Documentação da API',
-  tagIndex: 2,
+  tagIndex: 1,
   snakeCase: true,
-  debug: false,
+  debug: true,
   ignore: ['/swagger', '/docs'],
   preferredPutPatch: 'PUT',
   common: {
@@ -16,5 +16,4 @@ export default {
   defaultSecurityScheme: 'BearerAuth',
   persistAuthorization: true,
   showFullPath: false,
-  apis: ['docs/swagger/**/*.yml'],
 }
