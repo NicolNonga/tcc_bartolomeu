@@ -3,8 +3,13 @@ import type { HttpContext } from '@adonisjs/core/http'
 import SolicitacaoRepository from '#repositories/SolicitacaoRepository'
 import CriarSolicitacaoService from '#services/Solicitacoes/CriarSolicitacaoService'
 
-import { criarSolicitacaoValidator } from '#validators/criar_solicitacao'
+import {
+  criarSolicitacaoValidator,
+  solicitacaoValidationMessage,
+} from '#validators/criar_solicitacao'
 import { actualizarSolicitacaoValidator } from '#validators/actualizar_solicitacao'
+
+import { userValidationMessage } from '#validators/create_user'
 
 export default class SolicitacoesController {
   private solicitacaoRepository = new SolicitacaoRepository()
@@ -17,7 +22,62 @@ export default class SolicitacoesController {
    * @tag Solicitações
    * @authenticated
    *
-   * @requestBody <criarSolicitacaoValidator>
+   * @requestBody {
+   *   "required": true,
+   *   "content": {
+   *     "application/json": {
+   *       "schema": {
+   *         "type": "object",
+   *         "properties": {
+   *           "departamento_id": {
+   *             "type": "integer",
+   *             "example": 1
+   *           },
+   *           "tipo_servico_id": {
+   *             "type": "integer",
+   *             "example": 2
+   *           },
+   *           "descricao": {
+   *             "type": "string",
+   *             "example": "Necessidade de transporte para reunião"
+   *           },
+   *           "data_necessidade": {
+   *             "type": "string",
+   *             "example": "2026-05-20"
+   *           },
+   *           "hora_necessidade": {
+   *             "type": "string",
+   *             "example": "14:00"
+   *           },
+   *           "local_saida": {
+   *             "type": "string",
+   *             "example": "Maianga"
+   *           },
+   *           "local_destino": {
+   *             "type": "string",
+   *             "example": "Talatona"
+   *           },
+   *           "prioridade": {
+   *             "type": "string",
+   *             "enum": ["baixa", "media", "alta", "urgente"],
+   *             "example": "alta"
+   *           },
+   *           "observacao": {
+   *             "type": "string",
+   *             "example": "Solicitação prioritária"
+   *           }
+   *         },
+   *         "required": [
+   *           "departamento_id",
+   *           "tipo_servico_id",
+   *           "descricao",
+   *           "data_necessidade",
+   *           "prioridade"
+   *         ]
+   *       }
+   *     }
+   *   }
+   * }
    *
    * @responseBody 201 - {
    *   "message": "solicitacao registrada com sucesso"
@@ -46,7 +106,9 @@ export default class SolicitacoesController {
       })
     }
 
-    const payload = await request.validateUsing(criarSolicitacaoValidator)
+    const payload = await request.validateUsing(criarSolicitacaoValidator, {
+      messagesProvider: solicitacaoValidationMessage,
+    })
 
     await this.criarSolicitacaoService.execute(payload, user.id)
 
@@ -72,8 +134,9 @@ export default class SolicitacoesController {
    *   }
    * ]
    */
-  async index() {
-    return this.solicitacaoRepository.listar()
+  async index({ response }: HttpContext) {
+    const data = await this.solicitacaoRepository.listar()
+    return response.ok({ data: data })
   }
 
   /**

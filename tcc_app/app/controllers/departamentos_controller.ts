@@ -147,6 +147,7 @@ export default class DepartamentosController {
    * }
    */
   async destroy({ params, response }: HttpContext) {
-    const data =  new RemoverDepartamentoService().execute(params.id)
+    const data = new RemoverDepartamentoService().execute(params.id)
     return response.status(200).send({ message: 'Departamento removido com sucesso' })
+  }
 }

@@ -1,5 +1,5 @@
 export default {
-  path: import.meta.dirname + '/../', // aponta para a raiz do projecto
+  path: './',
   title: 'TCC API',
   version: '1.0.0',
   description: 'Documentação da API',

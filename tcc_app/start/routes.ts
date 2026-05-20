@@ -19,6 +19,7 @@ const AutoSwagger: any =
 const AuthsController = () => import('#controllers/auth_controller')
 const UsersController = () => import('#controllers/users_controller')
 import { middleware } from './kernel.js'
+const TipoServicoController = () => import('#controllers/tipo_servicos_controller')
 
 const ResetPasswordsController = () => import('#controllers/reset_passwords_controller')
 
@@ -58,11 +59,15 @@ router
   })
   .prefix('/api/roles_permission')
 
-router.get('/departamentos', [DepartamentosController, 'index'])
-router.get('/departamentos/:id', [DepartamentosController, 'show'])
-router.post('/departamentos', [DepartamentosController, 'store'])
-router.put('/departamentos/:id', [DepartamentosController, 'update'])
-router.delete('/departamentos/:id', [DepartamentosController, 'destroy'])
+router
+  .group(() => {
+    router.get('/', [DepartamentosController, 'index'])
+    router.get('/:id', [DepartamentosController, 'show'])
+    router.post('/', [DepartamentosController, 'store'])
+    router.put('/:id', [DepartamentosController, 'update'])
+    router.delete('/:id', [DepartamentosController, 'destroy'])
+  })
+  .prefix('/api/departamentos')
 
 router.get('/estados-solicitacao', [EstadosSolicitacaoController, 'index'])
 router.get('/estados-solicitacao/:id', [EstadosSolicitacaoController, 'show'])
@@ -70,12 +75,25 @@ router.post('/estados-solicitacao', [EstadosSolicitacaoController, 'store'])
 router.put('/estados-solicitacao/:id', [EstadosSolicitacaoController, 'update'])
 router.delete('/estados-solicitacao/:id', [EstadosSolicitacaoController, 'destroy'])
 
-router.get('/solicitacoes', [SolicitacoesController, 'index'])
-router.get('solicitacoes/minhas', [SolicitacoesController, 'minhas']).use(middleware.auth())
-router.get('/solicitacoes/:id', [SolicitacoesController, 'show']).use(middleware.auth())
-router.post('/solicitacoes', [SolicitacoesController, 'store']).use(middleware.auth())
-router.put('/solicitacoes/:id', [SolicitacoesController, 'update']).use(middleware.auth())
+router
+  .group(() => {
+    router.get('/', [SolicitacoesController, 'index'])
+    router.get('/minhas', [SolicitacoesController, 'minhas']).use(middleware.auth())
+    router.get('/:id', [SolicitacoesController, 'show']).use(middleware.auth())
+    router.post('/', [SolicitacoesController, 'store']).use(middleware.auth())
+    router.put('/:id', [SolicitacoesController, 'update']).use(middleware.auth())
+  })
+  .prefix('/api/solicitacoes')
 
+router
+  .group(() => {
+    router.get('/', [TipoServicoController, 'index'])
+    router.get('/:id', [TipoServicoController, 'show'])
+    router.post('/', [TipoServicoController, 'store'])
+    router.put('/:id', [TipoServicoController, 'update'])
+    router.delete('/:id', [TipoServicoController, 'destroy'])
+  })
+  .prefix('/api/tipo_servicos')
 router.get('/swagger', async () => {
   return AutoSwagger.docs(router.toJSON(), swagger)
 })
