@@ -1,8 +1,12 @@
 // eslint-disable-next-line unicorn/filename-case
 import Solicitacao from '#models/solicitacao'
+import { TransactionClientContract } from '@adonisjs/lucid/types/database'
 
 export default class SolicitacaoRepository {
-  async criar(dados: Partial<Solicitacao>) {
+  async criar(dados: Partial<Solicitacao>, trx?: TransactionClientContract) {
+    if (trx) {
+      return Solicitacao.create(dados, { client: trx })
+    }
     return Solicitacao.create(dados)
   }
 
@@ -34,9 +38,14 @@ export default class SolicitacaoRepository {
       .first()
   }
 
-  async actualizar(id: number, dados: Partial<Solicitacao>) {
+  async actualizar(id: number, dados: Partial<Solicitacao>, trx?: TransactionClientContract) {
     const solicitacao = await Solicitacao.findOrFail(id)
     solicitacao.merge(dados)
+
+    if (trx) {
+      solicitacao.useTransaction(trx)
+    }
+
     await solicitacao.save()
     return solicitacao
   }

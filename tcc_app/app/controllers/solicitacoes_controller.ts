@@ -155,8 +155,9 @@ export default class SolicitacoesController {
    *   }
    * ]
    */
-  async minhas({ auth }: HttpContext) {
-    return this.solicitacaoRepository.listarPorSolicitante(auth.user!.id)
+  async minhas({ auth, response }: HttpContext) {
+    const data = await this.solicitacaoRepository.listarPorSolicitante(auth.user!.id)
+    return response.ok({ data: data })
   }
 
   /**

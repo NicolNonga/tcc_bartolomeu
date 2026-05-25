@@ -13,9 +13,6 @@ export default class TipoServico extends BaseModel {
   @column()
   declare descricao: string
 
-  @column()
-  declare sigla: string
-
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
