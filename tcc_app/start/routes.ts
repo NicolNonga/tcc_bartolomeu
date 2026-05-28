@@ -19,6 +19,7 @@ const AutoSwagger: any =
 const AuthsController = () => import('#controllers/auth_controller')
 const UsersController = () => import('#controllers/users_controller')
 import { middleware } from './kernel.js'
+const ViaturasController = () => import('#controllers/viaturas_controller')
 const DocumentosSolicitacaoController = () =>
   import('#controllers/documentos_solicitacaos_controller')
 const DespachosController = () => import('#controllers/despachos_controller')
@@ -113,6 +114,14 @@ router
     router.delete('/:id', [DocumentosSolicitacaoController, 'destroy'])
   })
   .prefix('/api/documentos-solicitacao')
+  .use(middleware.auth())
+
+router
+  .group(() => {
+    router.post('/', [ViaturasController, 'store'])
+    router.get('/', [ViaturasController, 'listar'])
+  })
+  .prefix('/api/viaturas')
   .use(middleware.auth())
 router.get('/swagger', async () => {
   return AutoSwagger.docs(router.toJSON(), swagger)
