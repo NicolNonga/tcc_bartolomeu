@@ -11,7 +11,6 @@ export default class Viatura extends BaseModel {
 
   @column()
   declare marca: string
-
   @column()
   declare modelo: string
 

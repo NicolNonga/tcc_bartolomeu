@@ -19,6 +19,8 @@ const AutoSwagger: any =
 const AuthsController = () => import('#controllers/auth_controller')
 const UsersController = () => import('#controllers/users_controller')
 import { middleware } from './kernel.js'
+const ManutencoesController = () => import('#controllers/manutencoes_controller')
+const AtendimentosFrotaController = () => import('#controllers/atendimentos_frotas_controller')
 const ViaturasController = () => import('#controllers/viaturas_controller')
 const DocumentosSolicitacaoController = () =>
   import('#controllers/documentos_solicitacaos_controller')
@@ -122,6 +124,26 @@ router
     router.get('/', [ViaturasController, 'listar'])
   })
   .prefix('/api/viaturas')
+  .use(middleware.auth())
+
+router
+  .group(() => {
+    router.post('/', [AtendimentosFrotaController, 'store'])
+    router.get('/', [AtendimentosFrotaController, 'index'])
+    router.get('/:id', [AtendimentosFrotaController, 'show'])
+    router.put('/:id', [AtendimentosFrotaController, 'finalizar'])
+  })
+  .prefix('/api/atendimentos-frotas')
+  .use(middleware.auth())
+
+router
+  .group(() => {
+    router.get('/', [ManutencoesController, 'index'])
+    router.get('/:id', [ManutencoesController, 'show'])
+    router.post('/', [ManutencoesController, 'store'])
+    router.put('/finalizar/:id', [ManutencoesController, 'finalizar'])
+  })
+  .prefix('/api/manutencao')
   .use(middleware.auth())
 router.get('/swagger', async () => {
   return AutoSwagger.docs(router.toJSON(), swagger)

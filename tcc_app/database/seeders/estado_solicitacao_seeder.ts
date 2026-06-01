@@ -20,6 +20,21 @@ export default class EstadoSolicitacaoSeeder extends BaseSeeder {
         cor: '#ef4444',
         descricao: 'Solicitação rejeitada',
       },
+      {
+        nome: 'Em Andamento',
+        cor: '#ef4444',
+        descricao: 'Solicitação rejeitada',
+      },
+      {
+        nome: 'Concluida',
+        cor: '#10b981',
+        descricao: 'Solicitação concluida',
+      },
+      {
+        nome: 'Cancelada',
+        cor: '#ef4444',
+        descricao: 'Solicitação cancelada',
+      },
     ]
 
     for (const estado of estados) {
