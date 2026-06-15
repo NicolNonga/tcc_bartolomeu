@@ -19,6 +19,9 @@ const AutoSwagger: any =
 const AuthsController = () => import('#controllers/auth_controller')
 const UsersController = () => import('#controllers/users_controller')
 import { middleware } from './kernel.js'
+const RelatoriosController = () => import('#controllers/relatorio_geral_controller')
+const DashboardController = () => import('#controllers/dashboard_controller')
+const AbastecimentosController = () => import('#controllers/abastecimentos_controller')
 const ManutencoesController = () => import('#controllers/manutencoes_controller')
 const AtendimentosFrotaController = () => import('#controllers/atendimentos_frotas_controller')
 const ViaturasController = () => import('#controllers/viaturas_controller')
@@ -145,6 +148,22 @@ router
   })
   .prefix('/api/manutencao')
   .use(middleware.auth())
+
+router
+  .group(() => {
+    router.get('/', [AbastecimentosController, 'index'])
+    router.get('/:id', [AbastecimentosController, 'show'])
+    router.post('/', [AbastecimentosController, 'store'])
+  })
+  .prefix('/api/abastecimentos')
+  .use(middleware.auth())
+
+router
+  .group(() => {
+    router.get('/', [DashboardController, 'index'])
+    router.get('/relatorio', [RelatoriosController, 'index'])
+  })
+  .prefix('api/dashboard')
 router.get('/swagger', async () => {
   return AutoSwagger.docs(router.toJSON(), swagger)
 })
