@@ -77,22 +77,29 @@ router
     router.delete('/:id', [DepartamentosController, 'destroy'])
   })
   .prefix('/api/departamentos')
+  .use(middleware.auth())
 
-router.get('/estados-solicitacao', [EstadosSolicitacaoController, 'index'])
-router.get('/estados-solicitacao/:id', [EstadosSolicitacaoController, 'show'])
-router.post('/estados-solicitacao', [EstadosSolicitacaoController, 'store'])
-router.put('/estados-solicitacao/:id', [EstadosSolicitacaoController, 'update'])
-router.delete('/estados-solicitacao/:id', [EstadosSolicitacaoController, 'destroy'])
+router
+  .group(() => {
+    router.get('/', [EstadosSolicitacaoController, 'index'])
+    router.get('/:id', [EstadosSolicitacaoController, 'show'])
+    router.post('/', [EstadosSolicitacaoController, 'store'])
+    router.put('/:id', [EstadosSolicitacaoController, 'update'])
+    router.delete('/:id', [EstadosSolicitacaoController, 'destroy'])
+  })
+  .prefix('/api/estados-solicitacao')
+  .use(middleware.auth())
 
 router
   .group(() => {
     router.get('/', [SolicitacoesController, 'index'])
-    router.get('/minhas', [SolicitacoesController, 'minhas']).use(middleware.auth())
-    router.get('/:id', [SolicitacoesController, 'show']).use(middleware.auth())
-    router.post('/', [SolicitacoesController, 'store']).use(middleware.auth())
-    router.put('/:id', [SolicitacoesController, 'update']).use(middleware.auth())
+    router.get('/minhas', [SolicitacoesController, 'minhas'])
+    router.get('/:id', [SolicitacoesController, 'show'])
+    router.post('/', [SolicitacoesController, 'store'])
+    router.put('/:id', [SolicitacoesController, 'update'])
   })
   .prefix('/api/solicitacoes')
+  .use(middleware.auth())
 
 router
   .group(() => {
@@ -103,6 +110,7 @@ router
     router.delete('/:id', [TipoServicoController, 'destroy'])
   })
   .prefix('/api/tipo_servicos')
+  .use(middleware.auth())
 
 router
   .group(() => {
@@ -119,6 +127,7 @@ router
     router.delete('/:id', [DocumentosSolicitacaoController, 'destroy'])
   })
   .prefix('/api/documentos-solicitacao')
+  .use(middleware.auth())
   .use(middleware.auth())
 
 router
@@ -157,6 +166,7 @@ router
   })
   .prefix('/api/abastecimentos')
   .use(middleware.auth())
+  .use(middleware.auth())
 
 router
   .group(() => {
@@ -164,6 +174,7 @@ router
     router.get('/relatorio', [RelatoriosController, 'index'])
   })
   .prefix('api/dashboard')
+  .use(middleware.auth())
 router.get('/swagger', async () => {
   return AutoSwagger.docs(router.toJSON(), swagger)
 })
