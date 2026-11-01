@@ -21,6 +21,8 @@ export const criarAbastecimentoValidator = vine.compile(
     quantidade_litros: vine.number(),
     valor_total: vine.number(),
     quilometragem_registrada: vine.number().optional(),
+    condutor_id: vine.number().optional(),
+    cartao_combustivel_id: vine.number().optional(),
     posto_abastecimento: vine.string().trim().optional(),
     observacao: vine.string().trim().optional(),
   })
@@ -36,4 +38,18 @@ export const criarAbastcimentoValidatorMessage = new SimpleMessagesProvider(
     'database.unique': 'Ja  existe um {{field}} cadastrado',
   },
   fields
+)
+
+export const actualizarAbastecimentoValidator = vine.compile(
+  vine.object({
+    data_abastecimento: vine.string().optional(),
+    tipo_combustivel: vine.enum(['gasolina', 'diesel', 'electrico', 'hibrido']).optional(),
+    quantidade_litros: vine.number().optional(),
+    valor_total: vine.number().optional(),
+    quilometragem_registrada: vine.number().optional(),
+    condutor_id: vine.number().nullable().optional(),
+    cartao_combustivel_id: vine.number().nullable().optional(),
+    posto_abastecimento: vine.string().trim().optional(),
+    observacao: vine.string().trim().optional(),
+  })
 )

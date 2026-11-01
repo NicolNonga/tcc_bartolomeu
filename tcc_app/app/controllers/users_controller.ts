@@ -2,7 +2,11 @@ import User from '#models/user'
 import { SendEmail } from '#services/email/send_email'
 import { GenerateRandomPassword } from '#services/hash/generate_password'
 import { ChangePasswordValidator } from '#validators/change_password'
-import { CreateUserValidator, userValidationMessage } from '#validators/create_user'
+import {
+  CreateUserValidator,
+  UpdateUserValidator,
+  userValidationMessage,
+} from '#validators/create_user'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class UsersController {
@@ -42,8 +46,8 @@ export default class UsersController {
    * }
    */
   async index({ request, response }: HttpContext) {
-    const page = request.input('page')
-    const perPage = request.input('perPage')
+    const page = Number(request.input('page')) || 1
+    const perPage = Number(request.input('perPage')) || 10
 
     const data = await User.query()
       .orderBy('created_at', 'desc')
@@ -52,7 +56,7 @@ export default class UsersController {
           permission.where('is_active', true)
         })
       })
-      .paginate(page || 1, perPage || 10)
+      .paginate(page, perPage)
 
     return response.ok(data)
   }
@@ -121,8 +125,9 @@ export default class UsersController {
    */
   async update({ request, response, params }: HttpContext) {
     const { userId } = params
-    const userPayload = await request.validateUsing(CreateUserValidator, {
+    const userPayload = await request.validateUsing(UpdateUserValidator, {
       messagesProvider: userValidationMessage,
+      meta: { userId: Number(userId) },
     })
 
     const user = await User.findBy('id', userId)

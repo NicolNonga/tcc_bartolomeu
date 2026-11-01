@@ -1,5 +1,6 @@
 import AbastecimentoRepository from '#repositories/abastecimento_repository'
 import ViaturaRepository from '#repositories/viatura_repository'
+import HistoricoQuilometragem from '#models/historico_quilometragem'
 import db from '@adonisjs/lucid/services/db'
 
 export default class CriarAbastecimentoService {
@@ -21,11 +22,22 @@ export default class CriarAbastecimentoService {
           },
           trx
         )
+
+        await HistoricoQuilometragem.create(
+          {
+            viaturaId: payload.viatura_id,
+            quilometragem: payload.quilometragem_registrada,
+            dataRegisto: payload.data_abastecimento,
+            origem: 'abastecimento',
+          },
+          { client: trx }
+        )
       }
       await trx.commit()
       return abastecimento
     } catch (error) {
       await trx.rollback()
+      throw error
     }
   }
 }

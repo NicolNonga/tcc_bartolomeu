@@ -11,3 +11,24 @@ export enum EstadoOperacional {
   EM_MANUTENCAO = 'em_manutencao',
   INATIVA = 'inativa',
 }
+
+export enum CategoriaViatura {
+  LIGEIRO = 'ligeiro',
+  PESADO = 'pesado',
+  MOTO = 'moto',
+  AUTOCARRO = 'autocarro',
+  OUTRO = 'outro',
+}
+
+export enum EstadoViatura {
+  ACTIVO = 'activo',
+  EM_MANUTENCAO = 'em_manutencao',
+  ABATIDO = 'abatido',
+  VENDIDO = 'vendido',
+}
+
+export enum TipoDocumentoViatura {
+  SEGURO = 'seguro',
+  INSPECCAO = 'inspeccao',
+  LICENCA_CIRCULACAO = 'licenca_circulacao',
+}

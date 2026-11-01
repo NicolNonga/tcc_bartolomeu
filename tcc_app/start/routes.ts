@@ -30,10 +30,27 @@ const DocumentosSolicitacaoController = () =>
 const DespachosController = () => import('#controllers/despachos_controller')
 const TipoServicoController = () => import('#controllers/tipo_servicos_controller')
 
+const CondutoresController = () => import('#controllers/condutores_controller')
+const InfraccoesCondutorController = () => import('#controllers/infraccoes_condutor_controller')
+const AvaliacoesCondutorController = () => import('#controllers/avaliacoes_condutor_controller')
+const DocumentosViaturaController = () => import('#controllers/documentos_viatura_controller')
+const AnexosViaturaController = () => import('#controllers/anexos_viatura_controller')
+const HistoricoQuilometragemController = () =>
+  import('#controllers/historico_quilometragem_controller')
+const ManutencaoAgendamentosController = () =>
+  import('#controllers/manutencao_agendamentos_controller')
+const ManutencaoPecasController = () => import('#controllers/manutencao_pecas_controller')
+const CartoesCombustivelController = () => import('#controllers/cartoes_combustivel_controller')
+const ConsumoCombustivelController = () => import('#controllers/consumo_combustivel_controller')
+const AlertasController = () => import('#controllers/alertas_controller')
+const AuditLogsController = () => import('#controllers/audit_logs_controller')
+const NotificacoesController = () => import('#controllers/notificacoes_controller')
+
 const ResetPasswordsController = () => import('#controllers/reset_passwords_controller')
 
 const RolesController = () => import('#controllers/roles_controller')
 const RolePermissionsController = () => import('#controllers/role_permissions_controller')
+const PermissionsController = () => import('#controllers/permissions_controller')
 router.post('/auth', [AuthsController, 'store']).prefix('/api')
 
 router
@@ -46,8 +63,10 @@ router
     router.put('/:userId/redefinar_senha', [UsersController, 'setNewPassword'])
     router.get('/dropDownList', [UsersController, 'dropDownList'])
     router.get('/dropDownListMangers', [UsersController, 'dropDownListManagers'])
+    router.put('/:userId', [UsersController, 'update'])
   })
   .prefix('/api/users')
+  .use(middleware.auth())
 
 router
   .group(() => {
@@ -60,6 +79,14 @@ router
     router.get('/managers', [RolesController, 'showManagers'])
   })
   .prefix('/api/roles')
+  .use(middleware.auth())
+
+router
+  .group(() => {
+    router.get('/', [PermissionsController, 'index'])
+  })
+  .prefix('/api/permissions')
+  .use(middleware.auth())
 
 router
   .group(() => {
@@ -67,6 +94,7 @@ router
     router.put('/', [RolePermissionsController, 'delete'])
   })
   .prefix('/api/roles_permission')
+  .use(middleware.auth())
 
 router
   .group(() => {
@@ -134,8 +162,132 @@ router
   .group(() => {
     router.post('/', [ViaturasController, 'store'])
     router.get('/', [ViaturasController, 'listar'])
+    router.get('/:id', [ViaturasController, 'show'])
+    router.put('/:id', [ViaturasController, 'update'])
+    router.delete('/:id', [ViaturasController, 'destroy'])
   })
   .prefix('/api/viaturas')
+  .use(middleware.auth())
+
+router
+  .group(() => {
+    router.get('/viatura/:viaturaId', [DocumentosViaturaController, 'index'])
+    router.post('/', [DocumentosViaturaController, 'store'])
+    router.put('/:id', [DocumentosViaturaController, 'update'])
+    router.delete('/:id', [DocumentosViaturaController, 'destroy'])
+    router.get('/documento/:filename', [DocumentosViaturaController, 'download'])
+  })
+  .prefix('/api/documentos-viatura')
+  .use(middleware.auth())
+
+router
+  .group(() => {
+    router.get('/viatura/:viaturaId', [HistoricoQuilometragemController, 'index'])
+    router.post('/', [HistoricoQuilometragemController, 'store'])
+  })
+  .prefix('/api/historico-quilometragem')
+  .use(middleware.auth())
+
+router
+  .group(() => {
+    router.get('/viatura/:viaturaId', [AnexosViaturaController, 'index'])
+    router.get('/download/:id', [AnexosViaturaController, 'download'])
+    router.post('/', [AnexosViaturaController, 'store'])
+    router.delete('/:id', [AnexosViaturaController, 'destroy'])
+  })
+  .prefix('/api/anexos-viatura')
+  .use(middleware.auth())
+
+router
+  .group(() => {
+    router.get('/', [CondutoresController, 'index'])
+    router.post('/', [CondutoresController, 'store'])
+    router.get('/:id/historico-viaturas', [CondutoresController, 'historicoViaturas'])
+    router.get('/:id', [CondutoresController, 'show'])
+    router.put('/:id', [CondutoresController, 'update'])
+    router.delete('/:id', [CondutoresController, 'destroy'])
+  })
+  .prefix('/api/condutores')
+  .use(middleware.auth())
+
+router
+  .group(() => {
+    router.get('/condutor/:condutorId', [InfraccoesCondutorController, 'index'])
+    router.post('/', [InfraccoesCondutorController, 'store'])
+    router.delete('/:id', [InfraccoesCondutorController, 'destroy'])
+  })
+  .prefix('/api/infraccoes-condutor')
+  .use(middleware.auth())
+
+router
+  .group(() => {
+    router.get('/condutor/:condutorId', [AvaliacoesCondutorController, 'index'])
+    router.post('/', [AvaliacoesCondutorController, 'store'])
+    router.delete('/:id', [AvaliacoesCondutorController, 'destroy'])
+  })
+  .prefix('/api/avaliacoes-condutor')
+  .use(middleware.auth())
+
+router
+  .group(() => {
+    router.get('/', [ManutencaoAgendamentosController, 'index'])
+    router.post('/', [ManutencaoAgendamentosController, 'store'])
+    router.put('/:id', [ManutencaoAgendamentosController, 'update'])
+  })
+  .prefix('/api/manutencao-agendamentos')
+  .use(middleware.auth())
+
+router
+  .group(() => {
+    router.get('/manutencao/:manutencaoId', [ManutencaoPecasController, 'index'])
+    router.post('/', [ManutencaoPecasController, 'store'])
+    router.delete('/:id', [ManutencaoPecasController, 'destroy'])
+  })
+  .prefix('/api/manutencao-pecas')
+  .use(middleware.auth())
+
+router
+  .group(() => {
+    router.get('/', [CartoesCombustivelController, 'index'])
+    router.get('/:id', [CartoesCombustivelController, 'show'])
+    router.post('/', [CartoesCombustivelController, 'store'])
+    router.put('/:id', [CartoesCombustivelController, 'update'])
+    router.delete('/:id', [CartoesCombustivelController, 'destroy'])
+  })
+  .prefix('/api/cartoes-combustivel')
+  .use(middleware.auth())
+
+router
+  .group(() => {
+    router.get('/viatura/:viaturaId', [ConsumoCombustivelController, 'porViatura'])
+    router.get('/frota', [ConsumoCombustivelController, 'frota'])
+    router.get('/relatorio-custos', [ConsumoCombustivelController, 'relatorioCustos'])
+  })
+  .prefix('/api/consumo-combustivel')
+  .use(middleware.auth())
+
+router
+  .group(() => {
+    router.get('/', [AlertasController, 'index'])
+    router.post('/gerar-notificacoes', [AlertasController, 'gerarNotificacoes'])
+  })
+  .prefix('/api/alertas')
+  .use(middleware.auth())
+
+router
+  .group(() => {
+    router.get('/', [AuditLogsController, 'index'])
+  })
+  .prefix('/api/audit-logs')
+  .use(middleware.auth())
+
+router
+  .group(() => {
+    router.get('/', [NotificacoesController, 'index'])
+    router.put('/marcar-todas-lidas', [NotificacoesController, 'marcarTodasLidas'])
+    router.put('/:id/lida', [NotificacoesController, 'marcarLida'])
+  })
+  .prefix('/api/notificacoes')
   .use(middleware.auth())
 
 router
@@ -154,6 +306,9 @@ router
     router.get('/:id', [ManutencoesController, 'show'])
     router.post('/', [ManutencoesController, 'store'])
     router.put('/finalizar/:id', [ManutencoesController, 'finalizar'])
+    router.put('/:id/iniciar', [ManutencoesController, 'iniciar'])
+    router.put('/:id', [ManutencoesController, 'update'])
+    router.delete('/:id', [ManutencoesController, 'destroy'])
   })
   .prefix('/api/manutencao')
   .use(middleware.auth())
@@ -163,6 +318,8 @@ router
     router.get('/', [AbastecimentosController, 'index'])
     router.get('/:id', [AbastecimentosController, 'show'])
     router.post('/', [AbastecimentosController, 'store'])
+    router.put('/:id', [AbastecimentosController, 'update'])
+    router.delete('/:id', [AbastecimentosController, 'destroy'])
   })
   .prefix('/api/abastecimentos')
   .use(middleware.auth())
@@ -172,6 +329,9 @@ router
   .group(() => {
     router.get('/', [DashboardController, 'index'])
     router.get('/relatorio', [RelatoriosController, 'index'])
+    router.get('/custos-por-viatura', [DashboardController, 'custosPorViatura'])
+    router.get('/disponibilidade', [DashboardController, 'disponibilidade'])
+    router.get('/consumo-medio', [DashboardController, 'consumoMedio'])
   })
   .prefix('api/dashboard')
   .use(middleware.auth())

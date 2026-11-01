@@ -21,10 +21,14 @@ export const criarViaturaValidator = vine.compile(
     numero_chassi: vine.string().trim().optional(),
     cor: vine.string().trim().optional(),
     tipo_combustivel: vine.enum(['gasolina', 'diesel', 'electrico', 'hibrido']).optional(),
+    categoria: vine.enum(['ligeiro', 'pesado', 'moto', 'autocarro', 'outro']).optional(),
+    capacidade: vine.number().optional(),
     quilometragem_actual: vine.number().optional(),
     estado_operacional: vine
       .enum(['disponivel', 'em_servico', 'em_manutencao', 'inativa'])
       .optional(),
+    estado_viatura: vine.enum(['activo', 'em_manutencao', 'abatido', 'vendido']).optional(),
+    condutor_responsavel_id: vine.number().optional(),
     observacao: vine.string().trim().optional(),
   })
 )

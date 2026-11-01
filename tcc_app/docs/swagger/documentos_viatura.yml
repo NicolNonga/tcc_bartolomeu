@@ -1,0 +1,321 @@
+openapi: 3.0.3
+info:
+  title: Documentos de Viatura e Alertas de Vencimento API
+  version: 1.0.0
+  description: >
+    Documentação da API para gestão de documentos das viaturas (Seguro, Inspecção Periódica, Licença de Circulação)
+    e sistema de alertas de vencimento com notificações internas e por e-mail.
+
+paths:
+  /api/documentos-viatura/viatura/{viaturaId}:
+    get:
+      summary: Listar documentos de uma viatura
+      description: Retorna todos os documentos associados a uma viatura específica ordenados por data de validade.
+      tags:
+        - Documentos de Viatura
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: viaturaId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID da viatura
+      responses:
+        '200':
+          description: Lista de documentos retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DocumentoViatura'
+
+  /api/documentos-viatura:
+    post:
+      summary: Registar novo documento de viatura
+      description: Adiciona um novo documento (Seguro, Inspecção ou Licença de Circulação) para uma viatura.
+      tags:
+        - Documentos de Viatura
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CriarDocumentoViaturaInput'
+      responses:
+        '201':
+          description: Documento registado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Documento registado
+                  data:
+                    $ref: '#/components/schemas/DocumentoViatura'
+        '422':
+          description: Erro de validação dos campos enviados
+
+  /api/documentos-viatura/{id}:
+    put:
+      summary: Actualizar documento de viatura
+      description: Actualiza as informações de um documento de viatura existente.
+      tags:
+        - Documentos de Viatura
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID do documento de viatura
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActualizarDocumentoViaturaInput'
+      responses:
+        '200':
+          description: Documento actualizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/DocumentoViatura'
+        '404':
+          description: Documento não encontrado
+
+    delete:
+      summary: Eliminar documento de viatura
+      description: Remove um documento de viatura do sistema.
+      tags:
+        - Documentos de Viatura
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID do documento
+      responses:
+        '200':
+          description: Documento removido com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Documento removido
+        '404':
+          description: Documento não encontrado
+
+  /api/alertas:
+    get:
+      summary: Listar alertas de vencimento da frota
+      description: Retorna a compilação de documentos a vencer, cartas de condução a caducar e manutenções agendadas pendentes nos próximos N dias (default 30).
+      tags:
+        - Alertas e Notificações
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: dias
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 30
+          description: Número de dias de antecedência para considerar alertas
+      responses:
+        '200':
+          description: Lista de alertas agrupados por categoria
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      documentos:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/DocumentoViatura'
+                      cartas:
+                        type: array
+                        items:
+                          type: object
+                      agendamentos:
+                        type: array
+                        items:
+                          type: object
+
+  /api/alertas/gerar-notificacoes:
+    post:
+      summary: Gerar notificações e enviar e-mails de vencimento
+      description: Executa a verificação de prazos nos próximos N dias, gerando notificações no sistema e disparando e-mails para os gestores de frota.
+      tags:
+        - Alertas e Notificações
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: dias
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 30
+          description: Antecedência em dias
+      responses:
+        '200':
+          description: Processamento concluído com resumo de notificações e e-mails
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Notificações geradas com sucesso
+                  data:
+                    type: object
+                    properties:
+                      criadas:
+                        type: integer
+                        example: 3
+                      documentos:
+                        type: integer
+                        example: 2
+                      cartas:
+                        type: integer
+                        example: 1
+                      agendamentos:
+                        type: integer
+                        example: 0
+                      emails_enviados:
+                        type: integer
+                        example: 3
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    TipoDocumentoViatura:
+      type: string
+      enum:
+        - seguro
+        - inspeccao
+        - licenca_circulacao
+      description: >
+        Tipos de documentos suportados:
+        * `seguro`: Seguro Obrigatório / Facultativo da Viatura
+        * `inspeccao`: Inspecção Periódica Obrigatória
+        * `licenca_circulacao`: Licença de Circulação / Taxa de Circulação
+
+    DocumentoViatura:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        viaturaId:
+          type: integer
+          example: 5
+        tipoDocumento:
+          $ref: '#/components/schemas/TipoDocumentoViatura'
+        numeroDocumento:
+          type: string
+          nullable: true
+          example: "SEG-2026-9921"
+        entidadeEmissora:
+          type: string
+          nullable: true
+          example: "ENSA Seguros"
+        dataEmissao:
+          type: string
+          format: date
+          nullable: true
+          example: "2025-08-01"
+        dataValidade:
+          type: string
+          format: date
+          example: "2026-08-01"
+        observacao:
+          type: string
+          nullable: true
+          example: "Apólice contra todos os riscos"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CriarDocumentoViaturaInput:
+      type: object
+      required:
+        - viatura_id
+        - tipo_documento
+        - data_validade
+      properties:
+        viatura_id:
+          type: integer
+          example: 5
+        tipo_documento:
+          $ref: '#/components/schemas/TipoDocumentoViatura'
+        numero_documento:
+          type: string
+          example: "SEG-2026-9921"
+        entidade_emissora:
+          type: string
+          example: "ENSA Seguros"
+        data_emissao:
+          type: string
+          format: date
+          example: "2025-08-01"
+        data_validade:
+          type: string
+          format: date
+          example: "2026-08-01"
+        observacao:
+          type: string
+          example: "Seguro de frota"
+
+    ActualizarDocumentoViaturaInput:
+      type: object
+      properties:
+        tipo_documento:
+          $ref: '#/components/schemas/TipoDocumentoViatura'
+        numero_documento:
+          type: string
+        entidade_emissora:
+          type: string
+        data_emissao:
+          type: string
+          format: date
+        data_validade:
+          type: string
+          format: date
+        observacao:
+          type: string

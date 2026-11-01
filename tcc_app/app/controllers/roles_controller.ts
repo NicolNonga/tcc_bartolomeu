@@ -5,15 +5,15 @@ import type { HttpContext } from '@adonisjs/core/http'
 
 export default class RolesController {
   async index({ request, response }: HttpContext) {
-    const page = request.input('page')
-    const perPage = request.input('perPage')
+    const page = Number(request.input('page')) || 1
+    const perPage = Number(request.input('perPage')) || 10
 
     const data = await Role.query()
       .preload('permission', (permission) => {
         permission.where('is_active', true)
       })
       .orderBy('id', 'desc')
-      .paginate(page | 1, perPage | 10)
+      .paginate(page, perPage)
 
     return response.ok(data)
   }

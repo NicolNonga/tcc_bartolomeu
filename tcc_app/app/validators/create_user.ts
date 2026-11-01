@@ -47,3 +47,24 @@ export const userValidationMessage = new SimpleMessagesProvider(
   },
   fields
 )
+
+export const UpdateUserValidator = vine.withMetaData<{ userId: number }>().compile(
+  vine.object({
+    fullName: vine.string().trim(),
+    roleId: vine.number().exists(async (db, value) => {
+      const role = await db.from('roles').where('id', value).first()
+      return role
+    }),
+    email: vine
+      .string()
+      .email()
+      .unique(async (db, value, field) => {
+        const user = await db
+          .from('users')
+          .where('email', value)
+          .whereNot('id', field.meta.userId)
+          .first()
+        return !user
+      }),
+  })
+)

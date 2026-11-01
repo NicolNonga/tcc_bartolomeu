@@ -38,4 +38,22 @@ export default class RelatorioGeralRepository {
       .groupBy('viaturas.id')
       .orderBy('total_atendimentos', 'desc')
   }
+
+  async documentosAVencer() {
+    return db
+      .from('documento_viaturas')
+      .join('viaturas', 'documento_viaturas.viatura_id', 'viaturas.id')
+      .select(
+        'documento_viaturas.*',
+        'viaturas.matricula',
+        'viaturas.marca',
+        'viaturas.modelo'
+      )
+      .whereRaw('documento_viaturas.data_validade <= DATE_ADD(CURDATE(), INTERVAL 30 DAY)')
+      .orderBy('documento_viaturas.data_validade')
+  }
+
+  async custosTotaisPorViatura() {
+    return this.manutencaoPorViatura()
+  }
 }

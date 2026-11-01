@@ -9,6 +9,7 @@ const fields = {
   quilometragem_manutencao: 'quilomentragem',
   custo: 'custo',
   observacao: 'observação',
+  pecas_substituidas: 'peças substituidas',
 }
 export const createManutencaoValidator = vine.compile(
   vine.object({
@@ -18,12 +19,24 @@ export const createManutencaoValidator = vine.compile(
       return row
     }),
 
+    pecas_substituidas: vine
+      .array(
+        vine.object({
+          nome: vine.string().trim().minLength(1),
+          quantidade: vine.number().min(1),
+          custo: vine.number().min(0),
+        })
+      )
+      .optional(),
     tipo_manutencao: vine.enum(['preventiva', 'correctiva', 'inspecao']),
 
     descricao: vine.string().trim(),
 
     oficina: vine.string().trim().optional(),
-
+    ordem_servico: vine.string().trim().optional(),
+    fornecedor: vine.string().trim().optional(),
+    proxima_revisao_data: vine.date().optional(),
+    proxima_revisao_km: vine.number().optional(),
     data_entrada: vine.date(),
 
     data_saida: vine.date().optional(),
@@ -45,4 +58,20 @@ export const criarManutencaoValidatorMessage = new SimpleMessagesProvider(
     'database.unique': 'Ja  existe um {{field}} cadastrado',
   },
   fields
+)
+
+export const actualizarManutencaoValidator = vine.compile(
+  vine.object({
+    tipo_manutencao: vine.enum(['preventiva', 'correctiva', 'inspecao']).optional(),
+    descricao: vine.string().trim().optional(),
+    oficina: vine.string().trim().optional(),
+    ordem_servico: vine.string().trim().optional(),
+    fornecedor: vine.string().trim().optional(),
+    proxima_revisao_data: vine.date().optional(),
+    proxima_revisao_km: vine.number().optional(),
+    data_entrada: vine.date().optional(),
+    quilometragem_manutencao: vine.number().optional(),
+    custo: vine.number().optional(),
+    observacao: vine.string().trim().optional(),
+  })
 )

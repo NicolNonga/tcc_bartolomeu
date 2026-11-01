@@ -22,12 +22,13 @@ export default class RelatoriosService {
   constructor(private repository = new RelatorioGeralRepository()) {}
 
   async execute() {
-    const [solicitacoesPorMes, abastecimentoPorMes, manutencaoPorViatura, viaturasMaisUtilizadas] =
+    const [solicitacoesPorMes, abastecimentoPorMes, manutencaoPorViatura, viaturasMaisUtilizadas, documentosAVencer] =
       await Promise.all([
         this.repository.solicitacoesPorMes(),
         this.repository.abastecimentoPorMes(),
         this.repository.manutencaoPorViatura(),
         this.repository.viaturasMaisUtilizadas(),
+        this.repository.documentosAVencer(),
       ])
 
     return {
@@ -35,6 +36,7 @@ export default class RelatoriosService {
       abastecimentoPorMes: mapMes(abastecimentoPorMes),
       manutencaoPorViatura,
       viaturasMaisUtilizadas,
+      documentosAVencer,
     }
   }
 }

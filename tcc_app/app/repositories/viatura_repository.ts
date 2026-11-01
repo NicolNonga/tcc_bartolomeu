@@ -9,12 +9,21 @@ export default class ViaturaRepository {
     return Viatura.create(dados)
   }
 
-  async listar() {
-    return Viatura.query().orderBy('id', 'desc')
+  async buscarPorId(id: number) {
+    return Viatura.query()
+      .where('id', id)
+      .preload('condutorResponsavel', (q) => q.preload('user'))
+      .preload('documentos')
+      .preload('historicoQuilometragem')
+      .preload('anexos')
+      .first()
   }
 
-  async buscarPorId(id: number) {
-    return Viatura.find(id)
+  async listar() {
+    return Viatura.query()
+      .preload('condutorResponsavel', (q) => q.preload('user'))
+      .preload('documentos')
+      .orderBy('id', 'desc')
   }
 
   async actualizar(id: number, dados: Partial<Viatura>, trx?: TransactionClientContract) {
